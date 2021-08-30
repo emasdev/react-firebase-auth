@@ -26,6 +26,15 @@ export default function Login() {
     setLoading(false)
   }
 
+  function showPassword(e){
+    var input = document.getElementById("password-input");
+    if (input.type === "password") {
+      input.type = "text";
+    } else {
+      input.type = "password";
+    }
+  }
+
   return (
     <>
       <Card>
@@ -39,9 +48,11 @@ export default function Login() {
             </Form.Group>
             <Form.Group id="password">
               <Form.Label>Contraseña</Form.Label>
-              <Form.Control type="password" ref={passwordRef} required />
+              <Form.Control id="password-input" type="password" ref={passwordRef} required />
+              <input className="d-inline" type="checkbox" onClick={showPassword}/>
+              <small>Mostrar contraseña</small>      
             </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit">
+            <Button disabled={loading} className="w-100 mt-3" type="submit">
               Ingresar
             </Button>
           </Form>

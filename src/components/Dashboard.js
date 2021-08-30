@@ -26,6 +26,8 @@ export default function Dashboard() {
           <h2 className="text-center mb-4">Perfil</h2>
           {error && <Alert variant='danger'>{error}</Alert>}
           {currentUser && <p><strong>Email: </strong>{currentUser.email}</p>}
+          <p>Email Verificado: {(currentUser.emailVerified).toString}</p>
+          <p>Si tu correo no esta verificado aun no podra hacer uso de la aplicación. Entre a su correo y autorice su cuenta.</p>
           <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
             Actualizar Perfil
           </Link>
