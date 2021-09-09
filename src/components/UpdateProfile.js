@@ -15,7 +15,7 @@ export default function UpdateProfile() {
   function handleSubmit(e) {
     e.preventDefault()
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError("Passwords do not match")
+      return setError("Las contraseñas no coinciden")
     }
 
     const promises = []
