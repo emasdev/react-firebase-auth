@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -12,6 +13,24 @@ const config = {
 class Firebase {
   constructor() {
     const app = initializeApp(config);
+
+    const auth = getAuth();
+    this.auth = auth;
+
+    onAuthStateChanged(auth, user => {
+      console.log("onAuthStateChanged");
+      if (user) {
+        console.log(user);
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        // ...
+      } else {
+        console.log("not user signed in");
+        // User is signed out
+        // ...
+      }
+    });
   }
 
   // *** Auth API ***
