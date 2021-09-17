@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Navigation from "../Navigation";
@@ -12,12 +12,16 @@ import AdminPage from "../Admin";
 
 import * as ROUTES from "../../constants/routes";
 
-const App = () =>
-  <Router>
-    <div>
-      <Navigation />
-      <hr />
-    </div>
-  </Router>;
-
-export default App;
+export default class App extends Component {
+  render() {
+    return (
+      <Router>
+        <div>
+          <Navigation>
+            <hr />
+          </Navigation>
+        </div>
+      </Router>
+    );
+  }
+}
