@@ -25,10 +25,10 @@ const Dashboard = ({ history }) => {
           style={{
             background: "#fff",
             padding: 24,
-            minHeight: "80vh",
+            minHeight: "80vh"
           }}
         >
-          Dashbord
+          Hola {nombre}
         </div>
       </Content>
       <Footer style={{ textAlign: "center" }}>IDM</Footer>

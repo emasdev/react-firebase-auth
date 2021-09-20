@@ -1,13 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Header from "./Header";
 import { Layout } from "antd";
 import Signup from "./Signup";
+import IDMFooter from './IDMFooter'
+import Error from "./Error";
+import { withRouter } from "react-router";
+import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
+import { Auth } from "../context/AuthContext";
 
-const Login = () => {
-  const { Content, Footer } = Layout;
-  const [signup, setSignup] = useState(false);
+const Login = ({ history }) => {
+  const { Content } = Layout;
+  const [signup, setsignup] = useState(false);
+  const { usuario } = useContext(Auth);
+  const [error, seterror] = useState('')
+
+  useEffect(() => {
+    if (usuario) {
+      history.push("/");
+    }
+  }, [history, usuario]);
+
+  const onFinish = (values) => {
+    console.log('Received values of form: ', values);
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, values.email, values.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        seterror(error.message)
+      });
+
+  };
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -35,11 +65,19 @@ const Login = () => {
           }}
         >
           {!signup ? (
-            <Form name="normal_login" className="login-form" initialValues={{ remember: true }}>
-              <Form.Item name="username" rules={[{ required: true, message: "Please input your Username!" }]}>
+            <Form
+              name="login"
+              className="login-form"
+              initialValues={{ remember: true }}
+              onFinish={onFinish}>
+              <Form.Item>
+                <h3>Acceda a su cuenta de IDM</h3>
+              </Form.Item>
+              {error ? <Form.Item><Error mensaje={error} /></Form.Item> : null}
+              <Form.Item name="email" rules={[{ required: true, message: "Ingrese su email" }]}>
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
               </Form.Item>
-              <Form.Item name="password" rules={[{ required: true, message: "Please input your Password!" }]}>
+              <Form.Item name="password" rules={[{ required: true, message: "Ingrese su contraseña" }]}>
                 <Input
                   prefix={<LockOutlined className="site-form-item-icon" />}
                   type="password"
@@ -62,24 +100,23 @@ const Login = () => {
                   htmlType="submit"
                   className="login-form-button"
                   style={{ marginRight: 10 }}
-                  onClick={() => setSignup}
                 >
                   Ingresar
                 </Button>
                 O
-                <Button onClick={() => setSignup(true)} type="link">
+                <Button onClick={() => setsignup(true)} type="link">
                   Registrar Cuenta
                 </Button>
               </Form.Item>
             </Form>
           ) : (
-            <Signup setSignup={setSignup} />
+            <Signup setsignup={setsignup} />
           )}
         </div>
       </Content>
-      <Footer style={{ textAlign: "center" }}>IDM</Footer>
+      <IDMFooter />
     </Layout>
   );
 };
 
-export default Login;
+export default withRouter(Login);
