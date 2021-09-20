@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebase";
-import Cargando from "../components/Cargando";
+import Loading from "../components/Loading";
 
 export const Auth = React.createContext();
 
@@ -9,14 +9,14 @@ export const AuthContext = ({ children }) => {
   const [showChild, setShowChild] = useState(false);
 
   useEffect(() => {
-    auth().onAuthStateChanged(function (user) {
+    auth.onAuthStateChanged(function (user) {
       setUsuario(user);
       setShowChild(true);
     });
   }, []);
 
   if (!showChild) {
-    return <Cargando />;
+    return <Loading />;
   } else {
     return (
       <Auth.Provider
