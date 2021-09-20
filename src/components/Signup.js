@@ -20,19 +20,34 @@ const Signup = ({ setsignup, history }) => {
     createUserWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
         // Signed in
-        const user = userCredential.user;
-        console.log('signed in');        // ...
+        //const user = userCredential.user;
+        //console.log('signed in');        // ...
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        //const errorCode = error.code;
+        //const errorMessage = error.message;
         seterror(error.message)
       });
   };
 
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 8 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 16 },
+    },
+  };
+
+
+
+
   return (
     <>
       <Form
+        {...formItemLayout}
         form={form}
         name="register"
         onFinish={onFinish}
@@ -41,6 +56,7 @@ const Signup = ({ setsignup, history }) => {
         <Form.Item>
           <h3>Registre su cuenta de IDM</h3>
         </Form.Item>
+        {error ? <Form.Item><Error mensaje={error} /></Form.Item> : null}
         <Form.Item
           name="email"
           label="E-mail"
@@ -96,9 +112,11 @@ const Signup = ({ setsignup, history }) => {
           <Input.Password />
         </Form.Item>
 
-        <Form.Item>
+        <Form.Item style={
+          { textAlign: 'center' }
+        }>
           <Button type="primary" htmlType="submit">
-            Register
+            Registrar
           </Button>
           O
           <Button onClick={() => setsignup(false)} type="link" type="link">

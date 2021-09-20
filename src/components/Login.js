@@ -28,16 +28,18 @@ const Login = ({ history }) => {
     signInWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
         // Signed in
-        const user = userCredential.user;
+        //const user = userCredential.user;
         // ...
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        //const errorCode = error.code;
+        //const errorMessage = error.message;
         seterror(error.message)
       });
 
   };
+
+
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -56,8 +58,6 @@ const Login = ({ history }) => {
           style={{
             background: "#fff",
             padding: 24,
-            height: 450,
-            width: 400,
             textAlign: "center",
             flexDirection: "column",
             justifyContent: "center",
@@ -74,7 +74,11 @@ const Login = ({ history }) => {
                 <h3>Acceda a su cuenta de IDM</h3>
               </Form.Item>
               {error ? <Form.Item><Error mensaje={error} /></Form.Item> : null}
-              <Form.Item name="email" rules={[{ required: true, message: "Ingrese su email" }]}>
+              <Form.Item name="email" rules={[
+                {
+                  type: 'email',
+                  message: 'The input is not valid E-mail!',
+                }, { required: true, message: "Ingrese su email" }]}>
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
               </Form.Item>
               <Form.Item name="password" rules={[{ required: true, message: "Ingrese su contraseña" }]}>
@@ -86,7 +90,7 @@ const Login = ({ history }) => {
               </Form.Item>
               <Form.Item>
                 <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox>Remember me</Checkbox>
+                  <Checkbox>Recordarme</Checkbox>
                 </Form.Item>
 
                 <a className="login-form-forgot" href="">

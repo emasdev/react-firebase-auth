@@ -1,6 +1,8 @@
 En Proceso
-- Ingresar
+- Agregar datos doctor al agregar usuario
 
 Hecho 
 - Registrar nuevo
+- Ingresar
+- Dashboard
 
