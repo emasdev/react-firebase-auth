@@ -4,23 +4,24 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Header from "./Header";
 import { Layout } from "antd";
 import Signup from "./Signup";
-import IDMFooter from './IDMFooter'
+import Footer from './FooterContent'
 import Error from "./Error";
 import { withRouter } from "react-router";
 import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
 import { Auth } from "../context/AuthContext";
+import FooterContent from "./FooterContent";
 
 const Login = ({ history }) => {
   const { Content } = Layout;
   const [signup, setsignup] = useState(false);
-  const { usuario } = useContext(Auth);
+  const { user } = useContext(Auth);
   const [error, seterror] = useState('')
 
   useEffect(() => {
-    if (usuario) {
+    if (user) {
       history.push("/");
     }
-  }, [history, usuario]);
+  }, [history, user]);
 
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
@@ -118,7 +119,9 @@ const Login = ({ history }) => {
           )}
         </div>
       </Content>
-      <IDMFooter />
+      <Footer>
+        <FooterContent />
+      </Footer>
     </Layout>
   );
 };

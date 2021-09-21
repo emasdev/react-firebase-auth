@@ -3,19 +3,20 @@ import Header from "../components/Header";
 import { Layout } from "antd";
 import { Auth } from "../context/AuthContext";
 import { withRouter } from "react-router";
+import FooterContent from "./FooterContent";
 
 const Dashboard = ({ history }) => {
   const { Content, Footer } = Layout;
-  const { usuario } = useContext(Auth);
+  const { user } = useContext(Auth);
   const [nombre, setnombre] = useState(null);
 
   useEffect(() => {
-    if (usuario === null) {
+    if (user === null) {
       history.push("/login");
     }
 
-    usuario ? (usuario.displayName ? setnombre(usuario.displayName) : setnombre(usuario.email)) : setnombre(null);
-  }, [history, usuario]);
+    user ? (user.displayName ? setnombre(user.displayName) : setnombre(user.email)) : setnombre(null);
+  }, [history, user]);
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -31,7 +32,9 @@ const Dashboard = ({ history }) => {
           Hola {nombre}
         </div>
       </Content>
-      <Footer style={{ textAlign: "center" }}>IDM</Footer>
+      <Footer>
+        <FooterContent />
+      </Footer>
     </Layout>
   );
 };

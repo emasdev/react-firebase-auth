@@ -5,12 +5,12 @@ import Loading from "../components/Loading";
 export const Auth = React.createContext();
 
 export const AuthContext = ({ children }) => {
-  const [usuario, setUsuario] = useState(null);
+  const [user, setUser] = useState(null);
   const [showChild, setShowChild] = useState(false);
 
   useEffect(() => {
     auth.onAuthStateChanged(function (user) {
-      setUsuario(user);
+      setUser(user);
       setShowChild(true);
     });
   }, []);
@@ -21,7 +21,7 @@ export const AuthContext = ({ children }) => {
     return (
       <Auth.Provider
         value={{
-          usuario,
+          user,
         }}
       >
         {children}
