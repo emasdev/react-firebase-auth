@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Form,
   Input,
-  Button,
+  Button
 } from 'antd';
 import { withRouter } from "react-router"
 import Error from './Error';
@@ -40,6 +40,12 @@ const Signup = ({ setsignup, history }) => {
       sm: { span: 16 },
     },
   };
+
+  const prefixSelector = (
+    <Form.Item name="prefix" noStyle>
+      +55
+    </Form.Item>
+  );
 
 
 
@@ -112,9 +118,51 @@ const Signup = ({ setsignup, history }) => {
           <Input.Password />
         </Form.Item>
 
-        <Form.Item style={
-          { textAlign: 'center' }
-        }>
+        <Form.Item
+          name="nombre"
+          label="Nombre(s)"
+          rules={[
+            {
+              required: true,
+              message: 'Este campo es obligatório.',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="apellido"
+          label="Apellidos"
+          rules={[
+            {
+              required: true,
+              message: 'Este campo es obligatório.',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="telefono_fijo"
+          label="teléfono Fijo"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your phone number!',
+            },
+          ]}
+        >
+          <Input
+            addonBefore={prefixSelector}
+            style={{
+              width: '100%',
+            }}
+          />
+        </Form.Item>
+
+        <Form.Item>
           <Button type="primary" htmlType="submit">
             Registrar
           </Button>
