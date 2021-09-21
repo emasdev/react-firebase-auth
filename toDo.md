@@ -1,5 +1,5 @@
 En Proceso
-- Agregar datos doctor al agregar usuario
+- Agregar usuario nuevo a firestore
 
 Hecho 
 - Registrar nuevo

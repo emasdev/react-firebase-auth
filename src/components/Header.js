@@ -4,10 +4,10 @@ import { auth } from "../firebase";
 import { Auth } from "../context/AuthContext";
 
 
+
 export default function Header({ titulo, subtitulo }) {
 
   const { user } = useContext(Auth);
-
   const CloseSessionBtn = () => {
     if (user) {
       return (<Button onClick={() => auth.signOut()} key="logout" type="primary">

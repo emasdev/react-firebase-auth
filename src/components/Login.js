@@ -4,15 +4,14 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Header from "./Header";
 import { Layout } from "antd";
 import Signup from "./Signup";
-import Footer from './FooterContent'
+import FooterContent from './FooterContent'
 import Error from "./Error";
 import { withRouter } from "react-router";
 import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
 import { Auth } from "../context/AuthContext";
-import FooterContent from "./FooterContent";
 
 const Login = ({ history }) => {
-  const { Content } = Layout;
+  const { Content, Footer } = Layout;
   const [signup, setsignup] = useState(false);
   const { user } = useContext(Auth);
   const [error, seterror] = useState('')
@@ -80,22 +79,22 @@ const Login = ({ history }) => {
                   type: 'email',
                   message: 'The input is not valid E-mail!',
                 }, { required: true, message: "Ingrese su email" }]}>
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="E-mail" />
               </Form.Item>
               <Form.Item name="password" rules={[{ required: true, message: "Ingrese su contraseña" }]}>
                 <Input
                   prefix={<LockOutlined className="site-form-item-icon" />}
                   type="password"
-                  placeholder="Password"
+                  placeholder="Contraseña"
                 />
               </Form.Item>
               <Form.Item>
                 <Form.Item name="remember" valuePropName="checked" noStyle>
                   <Checkbox>Recordarme</Checkbox>
                 </Form.Item>
-
+                O
                 <a className="login-form-forgot" href="">
-                  Forgot password
+                  Recordar contraseña
                 </a>
               </Form.Item>
 
