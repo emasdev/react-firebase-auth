@@ -8,6 +8,7 @@ import { withRouter } from "react-router"
 import Error from './Error';
 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
 
 
 const Signup = ({ setsignup, history }) => {
@@ -22,6 +23,11 @@ const Signup = ({ setsignup, history }) => {
         // Signed in
         //const user = userCredential.user;
         //console.log('signed in');        // ...
+        const docRef = await setDoc(collection(db, "users"), {
+          email: values.email,
+          nombre: values.nombre,
+          apellidos: values.apellidos,
+        });
       })
       .catch((error) => {
         //const errorCode = error.code;
