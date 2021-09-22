@@ -12,22 +12,26 @@ import AdminPage from "../Admin";
 
 import * as ROUTES from "../../constants/routes";
 
+import Firebase, { FirebaseContext } from "../Firebase";
+
 const App = () => (
-  <Router>
-    <div>
-      <Navigation />
+  <FirebaseContext.Provider value={new Firebase()}>
+    <Router>
+      <div>
+        <Navigation />
 
-      <hr />
+        <hr />
 
-      <Route exact path={ROUTES.LANDING} component={LandingPage} />
-      <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-      <Route path={ROUTES.SIGN_IN} component={SignInPage} />
-      <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
-      <Route path={ROUTES.HOME} component={HomePage} />
-      <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-      <Route path={ROUTES.ADMIN} component={AdminPage} />
-    </div>
-  </Router>
+        <Route exact path={ROUTES.LANDING} component={LandingPage} />
+        <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+        <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+        <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+        <Route path={ROUTES.HOME} component={HomePage} />
+        <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+        <Route path={ROUTES.ADMIN} component={AdminPage} />
+      </div>
+    </Router>
+  </FirebaseContext.Provider>
 );
 
 export default App;
