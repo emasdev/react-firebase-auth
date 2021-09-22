@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -27,7 +28,9 @@ class Firebase {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
-        console.log(uid);
+        console.log(
+          `${user.email} is signed in and verifided: ${user.emailVerified}`
+        );
       } else {
         console.log("user is signed out");
         // User is signed out
@@ -43,6 +46,10 @@ class Firebase {
         // Signed in
         const user = userCredential.user;
         console.log(user);
+        return new Promise((resolve, reject) => {
+          resolve(user); // ¡Todo salió bien!
+        });
+
         // ...
       })
       .catch((error) => {
@@ -54,13 +61,13 @@ class Firebase {
   };
 
   doSignInWithEmailAndPassword = (email, password) =>
-    signInWithEmailAndPassword(this.auth, email, password);
+    signInWithEmailAndPassword(getAuth(), email, password);
 
-  doSignOut = () => signOut(this.auth);
+  doSignOut = () => signOut(getAuth());
 
-  doPasswordReset = (email) => sendPasswordResetEmail(this.auth, email);
+  doPasswordReset = (email) => sendPasswordResetEmail(getAuth(), email);
 
-  doPasswordUpdate = (password) => updatePassword(this.auth, password);
+  doPasswordUpdate = (password) => updatePassword(getAuth(), password);
 }
 
 export default Firebase;

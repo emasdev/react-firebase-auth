@@ -28,7 +28,15 @@ class SignUpFormBase extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     const { email, passwordOne } = this.state;
-    this.props.firebase.doCreateUserWithEmailAndPassword(email, passwordOne);
+    this.props.firebase
+      .doCreateUserWithEmailAndPassword(email, passwordOne)
+      .then((user) => {
+        console.log(user);
+      });
+    // .then(() => {
+    //   console.log("firebase");
+    // });
+    this.props.history.push(ROUTES.HOME);
     // .then((authUser) => {
     //   console.log("then not working");
     //   this.setState({ ...INITIAL_STATE });
@@ -83,7 +91,7 @@ class SignUpFormBase extends Component {
 
 const SignUpLink = () => (
   <p>
-    Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>{" "}
+    Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
   </p>
 );
 
