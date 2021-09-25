@@ -1,0 +1,120 @@
+import React, { useState, useEffect, useContext, createContext } from "react";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+const config = {
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  appId: process.env.REACT_APP_MESSAGING_APP_ID,
+};
+
+const app = initializeApp(config);
+const AuthContext = createContext();
+
+// Hook for child components to get the auth object ...
+// ... and re-render when it changes.
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
+// Provider hook that creates auth object and handles state
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+
+  const auth = getAuth();
+
+  const login = (email, password) => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Logged In
+        const user = userCredential.user;
+        setUser(user);
+        return user;
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
+  const signup = (email, password) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        setUser(user);
+        return user;
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        setUser(false);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
+  const sendPasswordResetEmail = (email) => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
+        console.log(error.message);
+        // ..
+      });
+  };
+
+  const confirmPasswordReset = (code, password) => {
+    confirmPasswordReset(auth, code, password)
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
+        console.log(error.message);
+        // ..
+      });
+  };
+
+  // Subscribe to user on mount
+  // Because this sets state in the callback it will cause any ...
+  // ... component that utilizes this hook to re-render with the ...
+  // ... latest auth object.
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      setUser(user);
+      setIsAuthenticating(false);
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
+  // The user object and auth methods
+  const values = {
+    user,
+    isAuthenticating,
+    login,
+    signup,
+    logout,
+    sendPasswordResetEmail,
+    confirmPasswordReset,
+  };
+
+  // Provider component that wraps your app and makes auth object
+  // ... available to any child component that calls useAuth().
+  return (
+    <AuthContext.Provider value={values}>
+      {!isAuthenticating && children}
+    </AuthContext.Provider>
+  );
+};
