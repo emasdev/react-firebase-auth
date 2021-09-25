@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -11,7 +17,7 @@ const config = {
   appId: process.env.REACT_APP_MESSAGING_APP_ID,
 };
 
-const app = initializeApp(config);
+initializeApp(config);
 const AuthContext = createContext();
 
 // Hook for child components to get the auth object ...
@@ -90,13 +96,19 @@ export const AuthProvider = ({ children }) => {
   // ... component that utilizes this hook to re-render with the ...
   // ... latest auth object.
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      setUser(user);
+    onAuthStateChanged(auth, (user) => {
       setIsAuthenticating(false);
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        setUser(user);
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
     });
-
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
   }, []);
 
   // The user object and auth methods

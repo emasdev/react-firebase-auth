@@ -1,8 +1,13 @@
 import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 
 const App = () => {
-  return <Layout>Vamonos!</Layout>;
+  return (
+    <Router>
+      <Layout>Vamonos!</Layout>
+    </Router>
+  );
 };
 
 export default App;
