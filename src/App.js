@@ -1,11 +1,19 @@
 import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
+
+import LoginForm from "./components/auth/LoginForm";
 
 const App = () => {
   return (
     <Router>
-      <Layout>Vamonos!</Layout>
+      <Switch>
+        <Layout>
+          <Route path="/login">
+            <LoginForm />
+          </Route>
+        </Layout>
+      </Switch>
     </Router>
   );
 };
