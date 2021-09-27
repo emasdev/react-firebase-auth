@@ -11,25 +11,31 @@ import {
   Input,
   Button,
 } from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
 
 import { useAuth } from "../../hooks/useAuth";
 
-const LoginForm = () => {
+const SigninForm = () => {
+  const history = useHistory();
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitSuccessful, isSubmitting },
   } = useForm();
 
-  const { login } = useAuth();
+  const { signup } = useAuth();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    return;
     try {
-      await login(data.email, data.password);
+      await signup(data.email, data.password);
+      history.push("/");
     } catch (error) {
-      console.log(error.message);
+      setError("email", {
+        type: "manual",
+        message: error.message,
+      });
     }
   };
 
@@ -40,7 +46,7 @@ const LoginForm = () => {
       p={6}
     >
       <Heading as="h1" mb={6}>
-        Ingresar a IDM
+        Registrar nuevo usuario de IDM
       </Heading>
       {errors.email && (
         <Alert status="error" variant="subtle" mt={6} mb={6}>
@@ -61,7 +67,7 @@ const LoginForm = () => {
         </Alert>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl mb={6}>
+        <FormControl mb={6} isRequired>
           <FormLabel htmlFor="email">Email</FormLabel>
           <Input
             placeholder="Email"
@@ -71,8 +77,23 @@ const LoginForm = () => {
             })}
           />
         </FormControl>
-        <FormControl mb={6}>
+        <FormControl mb={6} isRequired>
           <FormLabel htmlFor="password">Password</FormLabel>
+          <Input
+            name="password"
+            placeholder="Password"
+            {...register("password", {
+              required: true,
+              minLength: {
+                value: 6,
+                message:
+                  "El password tiene que tener 6 carácteres por lo menos",
+              },
+            })}
+          />
+        </FormControl>
+        <FormControl mb={6} isRequired>
+          <FormLabel htmlFor="password">Comfirmar Password</FormLabel>
           <Input
             name="password"
             placeholder="Password"
@@ -99,4 +120,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SigninForm;
