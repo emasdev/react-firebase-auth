@@ -4,11 +4,15 @@ import Layout, { CenterLayout } from "./components/Layout/Layout";
 
 import LoginForm from "./components/auth/LoginForm";
 import SignupForm from "./components/auth/SignupForm";
+import PrivateRoute from "./components/routes/PrivateRoute";
 
 const App = () => {
   return (
     <Router>
       <Switch>
+        <PrivateRoute exact path="/">
+          <Layout></Layout>
+        </PrivateRoute>
         <Route path="/login">
           <CenterLayout>
             <LoginForm />

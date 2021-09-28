@@ -13,15 +13,9 @@ const Nav = () => {
       {user && (
         <>
           <Link to="/">
-            <Text fontSize="md" mr={8}>
-              Dashboard
-            </Text>
+            <Button mr={2}>Dashboard</Button>
           </Link>
-          <Box as="button" onClick={logout}>
-            <Text fontSize="md" mr={8}>
-              Logout
-            </Text>
-          </Box>
+          <Button onClick={logout}>Cerrar sesión</Button>
         </>
       )}
       {!user && (

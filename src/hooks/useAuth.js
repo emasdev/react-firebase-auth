@@ -30,8 +30,22 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
-
   const auth = getAuth();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setIsAuthenticating(false);
+      if (user) {
+        console.log("user is in");
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        //const uid = user.uid;
+        setUser(user);
+      } else {
+        console.log("no user in");
+      }
+    });
+  }, [auth]);
 
   const login = (email, password) => {
     signInWithEmailAndPassword(auth, email, password)
@@ -90,26 +104,6 @@ export const AuthProvider = ({ children }) => {
         // ..
       });
   };
-
-  // Subscribe to user on mount
-  // Because this sets state in the callback it will cause any ...
-  // ... component that utilizes this hook to re-render with the ...
-  // ... latest auth object.
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setIsAuthenticating(false);
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        const uid = user.uid;
-        setUser(user);
-        // ...
-      } else {
-        // User is signed out
-        // ...
-      }
-    });
-  }, []);
 
   // The user object and auth methods
   const values = {
