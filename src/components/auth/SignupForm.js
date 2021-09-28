@@ -1,4 +1,5 @@
 import {
+  Flex,
   Box,
   FormControl,
   FormLabel,
@@ -12,7 +13,8 @@ import {
   useColorModeValue,
   Center,
   Alert,
-  AlertIcon
+  AlertIcon,
+  SimpleGrid
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router';
 
@@ -45,9 +47,8 @@ export default function SignupForm() {
   };
 
   return (
-    <Center
-      bg={useColorModeValue('gray.50', 'gray.800')}>
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+    <Center>
+      <Stack spacing={8} mx={'auto'} py={12} px={6}>
         <Stack align={'center'}>
           <Heading fontSize={'4xl'} textAlign={'center'}>Registrar nueva cuenta IDM</Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
@@ -70,7 +71,29 @@ export default function SignupForm() {
               </Alert>
             )}
             <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl id="email">
+              <SimpleGrid columns={2} spacing={5}>
+                <FormControl id="nombre" isRequired>
+                  <FormLabel>Nombre</FormLabel>
+                  <Input
+                    placeholder="Nombre(s)"
+                    {...register("nombre", {
+                      required: { value: true, message: "Es necesario escribir su nombre" },
+                      pattern: /^\S+@\S+$/i,
+                    })}
+                  />
+                </FormControl>
+                <FormControl id="apellidos" isRequired>
+                  <FormLabel>Apellidos</FormLabel>
+                  <Input
+                    placeholder="Apellidos"
+                    {...register("apellidos", {
+                      required: { value: true, message: "Es necesario escribir sus apellidos" },
+                      pattern: /^\S+@\S+$/i,
+                    })}
+                  />
+                </FormControl>
+              </SimpleGrid>
+              <FormControl id="email" mt={2} isRequired>
                 <FormLabel>Email</FormLabel>
                 <Input
                   placeholder="Email"
@@ -81,52 +104,77 @@ export default function SignupForm() {
                   })}
                 />
               </FormControl>
-              <FormControl id="password" mt={3}>
-                <FormLabel>Password</FormLabel>
-                <Input
-                  name="password"
-                  placeholder="Password"
-                  type="password"
-                  {...register("password", {
-                    required: { value: true, message: "Es necesario escribir un password correcto" },
-                    minLength: {
-                      value: 6,
-                      message:
-                        "El password tiene que tener 6 carácteres por lo menos",
-                    },
-                  })}
-                />
-              </FormControl>
-              <FormControl id="cpassword" mt={3}>
-                <FormLabel>Comfirmar password</FormLabel>
-                <Input
-                  name="cpassword"
-                  placeholder="Comfirmar password"
-                  type="password"
-                  {...register("cpassword", {
-                    required: { value: true, message: "Es necesario escribir un password correcto" },
-                    minLength: {
-                      value: 6,
-                      message:
-                        "El password tiene que tener 6 carácteres por lo menos",
-                    },
-                  })}
-                />
-              </FormControl>
+              <SimpleGrid columns={2} spacing={5}>
+                <FormControl id="password" mt={3} isRequired>
+                  <FormLabel>Password</FormLabel>
+                  <Input
+                    name="password"
+                    placeholder="Password"
+                    type="password"
+                    {...register("password", {
+                      required: { value: true, message: "Es necesario escribir un password correcto" },
+                      minLength: {
+                        value: 6,
+                        message:
+                          "El password tiene que tener 6 carácteres por lo menos",
+                      },
+                    })}
+                  />
+                </FormControl>
+                <FormControl id="cpassword" mt={3} isRequired>
+                  <FormLabel>Comfirmar password</FormLabel>
+                  <Input
+                    name="cpassword"
+                    placeholder="Comfirmar password"
+                    type="password"
+                    {...register("cpassword", {
+                      required: { value: true, message: "Es necesario escribir un password correcto" },
+                      minLength: {
+                        value: 6,
+                        message:
+                          "El password tiene que tener 6 carácteres por lo menos",
+                      },
+                    })}
+                  />
+                </FormControl>
+              </SimpleGrid>
+              <SimpleGrid columns={2} spacing={5}>
+                <FormControl id="telefono" mt={3} isRequired>
+                  <FormLabel>Teléfono movil</FormLabel>
+                  <Input
+                    name="telefono"
+                    placeholder="Teléfono"
+                    type="tel"
+                    {...register("telefono", {
+                      required: { value: true, message: "Es necesario escribir un teléfono correcto" },
+                      minLength: {
+                        value: 9,
+                        message:
+                          "El teléfono tiene que tener 10 numeros por lo menos",
+                      },
+                      maxLength: {
+                        value: 10,
+                        message:
+                          "El teléfono tiene que tener 10 numeros máximo",
+                      }
+                    })}
+                  />
+                </FormControl>
+
+              </SimpleGrid>
               <Stack spacing={10} mt={4}>
                 <Stack
                   direction={{ base: 'column', sm: 'row' }}
                   align={'start'}
                   justify={'space-between'}>
-                  <Checkbox>Recordar</Checkbox>
-                  <Link color={'blue.400'}>¿Olvidaste tu password?</Link>
+                  <Checkbox>Aceptar terminos y condiciones</Checkbox>
+                  <Link color={'blue.400'}>ver terminos y condiciones</Link>
                 </Stack>
                 <Button
-                  mt={4}
                   colorScheme="teal"
                   isLoading={isSubmitting}
                   type="submit"
-                  colorScheme="blue">
+                >
                   Registrar
                 </Button>
               </Stack>
