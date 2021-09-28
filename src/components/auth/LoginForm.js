@@ -1,20 +1,25 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-
 import {
-  Heading,
-  GridItem,
-  Alert,
-  AlertIcon,
-  FormLabel,
+  Box,
   FormControl,
+  FormLabel,
   Input,
+  Checkbox,
+  Stack,
+  Link,
   Button,
-} from "@chakra-ui/react";
+  Heading,
+  Text,
+  useColorModeValue,
+  Center,
+  Alert,
+  AlertIcon
+} from '@chakra-ui/react';
 
+import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 
-const LoginForm = () => {
+export default function LoginForm() {
+
   const {
     register,
     handleSubmit,
@@ -24,8 +29,6 @@ const LoginForm = () => {
   const { login } = useAuth();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    return;
     try {
       await login(data.email, data.password);
     } catch (error) {
@@ -34,69 +37,84 @@ const LoginForm = () => {
   };
 
   return (
-    <GridItem
-      colStart={[1, null, null, 2, null, null]}
-      colSpan={[3, null, null, 1, null, null]}
-      p={6}
-    >
-      <Heading as="h1" mb={6}>
-        Ingresar a IDM
-      </Heading>
-      {errors.email && (
-        <Alert status="error" variant="subtle" mt={6} mb={6}>
-          <AlertIcon></AlertIcon>
-          {errors.email.type}
-        </Alert>
-      )}
-      {errors.password && (
-        <Alert status="error" variant="subtle" mt={6} mb={6}>
-          <AlertIcon></AlertIcon>
-          {errors.password.type}
-        </Alert>
-      )}
-      {isSubmitSuccessful && (
-        <Alert status="success" variant="subtle" mt={6} mb={6}>
-          <AlertIcon></AlertIcon>
-          Se le ha enviado una confirmación a su correo electronico.
-        </Alert>
-      )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl mb={6}>
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <Input
-            placeholder="Email"
-            {...register("email", {
-              required: true,
-              pattern: /^\S+@\S+$/i,
-            })}
-          />
-        </FormControl>
-        <FormControl mb={6}>
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <Input
-            name="password"
-            placeholder="Password"
-            {...register("password", {
-              required: true,
-              minLength: {
-                value: 6,
-                message:
-                  "El password tiene que tener 6 carácteres por lo menos",
-              },
-            })}
-          />
-        </FormControl>
-        <Button
-          mt={4}
-          colorScheme="teal"
-          isLoading={isSubmitting}
-          type="submit"
-        >
-          Submit
-        </Button>
-      </form>
-    </GridItem>
-  );
-};
+    <Center
+      bg={useColorModeValue('gray.50', 'gray.800')}>
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Stack align={'center'}>
+          <Heading fontSize={'4xl'} textAlign={'center'}>Ingresar a IDM</Heading>
+          <Text fontSize={'lg'} color={'gray.600'}>
+            Y utilice esta gran herramienta
+          </Text>
+        </Stack>
+        <Box
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'lg'}
+          p={8}>
+          <Stack spacing={4}>
+            {console.log(errors.size)}
+            {errors.size && (
+              <Alert status="error" variant="subtle" mt={6} mb={6}>
+                <AlertIcon />{errors.email.message}
+                <AlertIcon />{errors.password.message}
+              </Alert>
+            )}
+            {isSubmitSuccessful && (
+              <Alert status="success" variant="subtle" mt={6} mb={6}>
+                <AlertIcon></AlertIcon>
+                Se le ha enviado una confirmación a su correo electronico.
+              </Alert>
+            )}
 
-export default LoginForm;
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormControl id="email">
+                <FormLabel>Ingresar el email asociado a su cuenta IDM</FormLabel>
+                <Input
+                  placeholder="Email"
+                  type="email"
+                  {...register("email", {
+                    required: { value: true, message: "Es necesario escribir un email asociado a su cuenta IDM" },
+                    pattern: /^\S+@\S+$/i,
+                  })}
+                />
+              </FormControl>
+              <FormControl id="password" mt={3}>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  name="password"
+                  placeholder="Password"
+                  type="password"
+                  {...register("password", {
+                    required: { value: true, message: "Es necesario escribir un password correcto" },
+                    minLength: {
+                      value: 6,
+                      message:
+                        "El password tiene que tener 6 carácteres por lo menos",
+                    },
+                  })}
+                />
+              </FormControl>
+              <Stack spacing={10} mt={4}>
+                <Stack
+                  direction={{ base: 'column', sm: 'row' }}
+                  align={'start'}
+                  justify={'space-between'}>
+                  <Checkbox>Recordar</Checkbox>
+                  <Link color={'blue.400'}>¿Olvidaste tu password?</Link>
+                </Stack>
+                <Button
+                  mt={4}
+                  colorScheme="teal"
+                  isLoading={isSubmitting}
+                  type="submit"
+                  colorScheme="blue">
+                  Ingresar
+                </Button>
+              </Stack>
+            </form>
+          </Stack>
+        </Box>
+      </Stack>
+    </Center>
+  );
+}

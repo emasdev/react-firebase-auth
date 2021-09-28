@@ -1,21 +1,22 @@
 import React from "react";
-import { Grid } from "@chakra-ui/layout";
-
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import { Grid, Heading, Spacer, Flex } from "@chakra-ui/react";
 import Nav from "./Nav";
 
 const Layout = ({ children }) => {
   return (
     <Grid
       minH="100vh"
-      templateColumns="repeat(3, 1fr)"
-      templateRows="max-content"
-      gap={6}
-      p={3}
+      templateColumns="1fr"
+      templateRows="80px 1fr"
     >
-      <Nav />
-      <ColorModeSwitcher position="absolute" top={3} right={3} />
+      <Flex p={4} alignItems="center">
+
+        <Heading size="md">IDM Cloud</Heading>
+        <Spacer />
+        <Nav />
+      </Flex>
       {children}
+
     </Grid>
   );
 };

@@ -1,21 +1,26 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-
 import {
-  Heading,
-  GridItem,
-  Alert,
-  AlertIcon,
-  FormLabel,
+  Box,
   FormControl,
+  FormLabel,
   Input,
+  Checkbox,
+  Stack,
+  Link,
   Button,
-} from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
+  Heading,
+  Text,
+  useColorModeValue,
+  Center,
+  Alert,
+  AlertIcon
+} from '@chakra-ui/react';
+import { useHistory } from 'react-router';
 
+import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 
-const SigninForm = () => {
+export default function SignupForm() {
+
   const history = useHistory();
 
   const {
@@ -40,84 +45,95 @@ const SigninForm = () => {
   };
 
   return (
-    <GridItem
-      colStart={[1, null, null, 2, null, null]}
-      colSpan={[3, null, null, 1, null, null]}
-      p={6}
-    >
-      <Heading as="h1" mb={6}>
-        Registrar nuevo usuario de IDM
-      </Heading>
-      {errors.email && (
-        <Alert status="error" variant="subtle" mt={6} mb={6}>
-          <AlertIcon></AlertIcon>
-          {errors.email.type}
-        </Alert>
-      )}
-      {errors.password && (
-        <Alert status="error" variant="subtle" mt={6} mb={6}>
-          <AlertIcon></AlertIcon>
-          {errors.password.type}
-        </Alert>
-      )}
-      {isSubmitSuccessful && (
-        <Alert status="success" variant="subtle" mt={6} mb={6}>
-          <AlertIcon></AlertIcon>
-          Se le ha enviado una confirmación a su correo electronico.
-        </Alert>
-      )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl mb={6} isRequired>
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <Input
-            placeholder="Email"
-            {...register("email", {
-              required: true,
-              pattern: /^\S+@\S+$/i,
-            })}
-          />
-        </FormControl>
-        <FormControl mb={6} isRequired>
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <Input
-            name="password"
-            placeholder="Password"
-            {...register("password", {
-              required: true,
-              minLength: {
-                value: 6,
-                message:
-                  "El password tiene que tener 6 carácteres por lo menos",
-              },
-            })}
-          />
-        </FormControl>
-        <FormControl mb={6} isRequired>
-          <FormLabel htmlFor="password">Comfirmar Password</FormLabel>
-          <Input
-            name="password"
-            placeholder="Password"
-            {...register("password", {
-              required: true,
-              minLength: {
-                value: 6,
-                message:
-                  "El password tiene que tener 6 carácteres por lo menos",
-              },
-            })}
-          />
-        </FormControl>
-        <Button
-          mt={4}
-          colorScheme="teal"
-          isLoading={isSubmitting}
-          type="submit"
-        >
-          Submit
-        </Button>
-      </form>
-    </GridItem>
-  );
-};
+    <Center
+      bg={useColorModeValue('gray.50', 'gray.800')}>
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Stack align={'center'}>
+          <Heading fontSize={'4xl'} textAlign={'center'}>Registrar nueva cuenta IDM</Heading>
+          <Text fontSize={'lg'} color={'gray.600'}>
+            y obtenga grandes beneficios
+          </Text>
+        </Stack>
+        <Box
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'lg'}
+          p={8}>
+          <Stack spacing={4}>
+            {errors.size > 0 && (
+              <Alert status="error" variant="subtle" mt={6} mb={6}>
+                <AlertIcon>{errors.email.message}</AlertIcon>
+                <AlertIcon>{errors.password.message}</AlertIcon>
+                <AlertIcon>{errors.cpassword.message}</AlertIcon>
 
-export default SigninForm;
+
+              </Alert>
+            )}
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormControl id="email">
+                <FormLabel>Email</FormLabel>
+                <Input
+                  placeholder="Email"
+                  type="email"
+                  {...register("email", {
+                    required: { value: true, message: "Es necesario escribir un email asociado a su cuenta IDM" },
+                    pattern: /^\S+@\S+$/i,
+                  })}
+                />
+              </FormControl>
+              <FormControl id="password" mt={3}>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  name="password"
+                  placeholder="Password"
+                  type="password"
+                  {...register("password", {
+                    required: { value: true, message: "Es necesario escribir un password correcto" },
+                    minLength: {
+                      value: 6,
+                      message:
+                        "El password tiene que tener 6 carácteres por lo menos",
+                    },
+                  })}
+                />
+              </FormControl>
+              <FormControl id="cpassword" mt={3}>
+                <FormLabel>Comfirmar password</FormLabel>
+                <Input
+                  name="cpassword"
+                  placeholder="Comfirmar password"
+                  type="password"
+                  {...register("cpassword", {
+                    required: { value: true, message: "Es necesario escribir un password correcto" },
+                    minLength: {
+                      value: 6,
+                      message:
+                        "El password tiene que tener 6 carácteres por lo menos",
+                    },
+                  })}
+                />
+              </FormControl>
+              <Stack spacing={10} mt={4}>
+                <Stack
+                  direction={{ base: 'column', sm: 'row' }}
+                  align={'start'}
+                  justify={'space-between'}>
+                  <Checkbox>Recordar</Checkbox>
+                  <Link color={'blue.400'}>¿Olvidaste tu password?</Link>
+                </Stack>
+                <Button
+                  mt={4}
+                  colorScheme="teal"
+                  isLoading={isSubmitting}
+                  type="submit"
+                  colorScheme="blue">
+                  Registrar
+                </Button>
+              </Stack>
+            </form>
+          </Stack>
+        </Box>
+      </Stack>
+    </Center>
+  );
+}
