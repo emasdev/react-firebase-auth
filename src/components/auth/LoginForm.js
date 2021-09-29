@@ -56,7 +56,6 @@ export default function LoginForm() {
           p={8}
         >
           <Stack spacing={4}>
-            {console.log(errors.size)}
             {errors.size && (
               <Alert status="error" variant="subtle" mt={6} mb={6}>
                 <AlertIcon />
