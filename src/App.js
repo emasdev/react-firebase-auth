@@ -4,26 +4,30 @@ import Layout, { CenterLayout } from "./components/Layout/Layout";
 
 import LoginForm from "./components/auth/LoginForm";
 import SignupForm from "./components/auth/SignupForm";
-import PrivateRoute from "./components/routes/PrivateRoute";
+import { AuthProvider } from "./hooks/useAuth";
 
 const App = () => {
   return (
     <Router>
-      <Switch>
-        <PrivateRoute exact path="/">
-          <Layout></Layout>
-        </PrivateRoute>
-        <Route path="/login">
-          <CenterLayout>
-            <LoginForm />
-          </CenterLayout>
-        </Route>
-        <Route path="/signup">
-          <Layout>
-            <SignupForm />
-          </Layout>
-        </Route>
-      </Switch>
+      <AuthProvider>
+        <Switch>
+          <Route exact path="/">
+            <Layout>
+              <div>Loading</div>
+            </Layout>
+          </Route>
+          <Route path="/login">
+            <CenterLayout>
+              <LoginForm />
+            </CenterLayout>
+          </Route>
+          <Route path="/signup">
+            <Layout>
+              <SignupForm />
+            </Layout>
+          </Route>
+        </Switch>
+      </AuthProvider>
     </Router>
   );
 };
