@@ -42,21 +42,31 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         console.log("user is in");
         setUser(user);
+        if (!userData) {
+          const docRef = doc(db, "usuarios", user.uid);
+          getDoc(docRef).then((docSnap) => {
+            if (docSnap.exists()) {
+              setUserData(docSnap.data());
+            }
+          });
+        }
       } else {
         console.log("no user in");
       }
     });
   }, [auth]);
 
-  useEffect(() => {
-    if (user && !userData) {
-      getCurrentUserDoc().then((data) => {
-        setUserData(data);
-        console.log("userData");
-        console.log(userData);
-      });
-    }
-  }, [user, db]);
+  // useEffect(() => {
+
+  // })
+
+  // useEffect(() => {
+  //   if (user && !userData) {
+  //     getCurrentUserDoc().then((data) => {
+  //       console.log(userData);
+  //     });
+  //   }
+  // }, [user, userData]);
 
   const doSignInWithEmailAndPassword = async (email, password) => {
     let userCredentials = null;
@@ -86,18 +96,18 @@ export const AuthProvider = ({ children }) => {
     return isCreated;
   };
 
-  const getCurrentUserDoc = async () => {
-    const docRef = doc(db, "usuarios", user.uid);
-    const docSnap = await getDoc(docRef);
+  // const getCurrentUserDoc = async () => {
+  //   const docRef = doc(db, "usuarios", user.uid);
+  //   const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      return data;
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
-  };
+  //   if (docSnap.exists()) {
+  //     const data = docSnap.data();
+  //     return data;
+  //   } else {
+  //     // doc.data() will be undefined in this case
+  //     console.log("No such document!");
+  //   }
+  // };
 
   const doSignOut = async () => {
     let isSignedOut = false;
