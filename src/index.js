@@ -3,9 +3,7 @@ import { ChakraProvider, theme } from "@chakra-ui/react";
 import { ColorModeScript } from "@chakra-ui/react";
 import ReactDOM from "react-dom";
 
-import App from "./App";
-
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import App from "./components/App";
 
 ReactDOM.render(
   <StrictMode>

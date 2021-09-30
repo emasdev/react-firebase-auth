@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import Loading from "../components/views/Loading";
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -47,80 +42,19 @@ export const AuthProvider = ({ children }) => {
     });
   }, [auth]);
 
-  const login = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Logged In
-        const user = userCredential.user;
-        setUser(user);
-        return user;
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
-  };
-
-  const signup = (email, password) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        setUser(user);
-        return user;
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
-  };
-
-  const logout = () => {
-    signOut(auth)
-      .then(() => {
-        setUser(false);
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
-  };
-
-  const sendPasswordResetEmail = (email) => {
-    sendPasswordResetEmail(auth, email)
-      .then(() => {
-        return true;
-      })
-      .catch((error) => {
-        console.log(error.message);
-        // ..
-      });
-  };
-
-  const confirmPasswordReset = (code, password) => {
-    confirmPasswordReset(auth, code, password)
-      .then(() => {
-        return true;
-      })
-      .catch((error) => {
-        console.log(error.message);
-        // ..
-      });
-  };
-
   // The user object and auth methods
   const values = {
     user,
     isAuthenticating,
-    login,
-    signup,
-    logout,
-    sendPasswordResetEmail,
-    confirmPasswordReset,
   };
 
-  // Provider component that wraps your app and makes auth object
-  // ... available to any child component that calls useAuth().
-  return (
-    <AuthContext.Provider value={values}>
-      {!isAuthenticating && children}
-    </AuthContext.Provider>
-  );
+  if (isAuthenticating) {
+    return <Loading />;
+  } else {
+    return (
+      <AuthContext.Provider value={values}>
+        {!isAuthenticating && children}
+      </AuthContext.Provider>
+    );
+  }
 };
