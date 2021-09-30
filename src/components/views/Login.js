@@ -1,34 +1,77 @@
+import { useForm } from "react-hook-form";
 import React from "react";
+import { withRouter } from "react-router-dom";
 import {
-  FormControl,
+  FormErrorMessage,
   FormLabel,
+  FormControl,
   Input,
-  Heading,
   Button,
+  Divider,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
 import Layout from "../Layout/Layout";
+import { useAuth } from "../../hooks/useAuth";
 
-const Login = () => {
+const Login = ({ history }) => {
+  const { doSignInWithEmailAndPassword } = useAuth();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm();
+
+  const onSubmit = async (values) => {
+    let user = null;
+    try {
+      user = await doSignInWithEmailAndPassword(values.email, values.password);
+      history.push("/");
+    } catch (e) {
+      console.error(e.message);
+    }
+  };
   return (
     <Layout>
-      <Heading>Ingresar</Heading>
-      <form>
-        <FormControl id="email">
-          <FormLabel>Email</FormLabel>
-          <Input type="email" />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl isInvalid={errors.email}>
+          <FormLabel htmlFor="email">Email</FormLabel>
+          <Input
+            id="email"
+            placeholder="email"
+            type="email"
+            {...register("email", {
+              required: "Este campo es requerido",
+              pattern: /^\S+@\S+$/i,
+            })}
+          />
+          <FormErrorMessage>
+            {errors.email && errors.email.message}
+          </FormErrorMessage>
         </FormControl>
-        <FormControl id="password">
-          <FormLabel>Password</FormLabel>
-          <Input type="password" />
+        <FormControl isInvalid={errors.password}>
+          <FormLabel htmlFor="password">Password</FormLabel>
+          <Input
+            id="password"
+            placeholder="password"
+            type="password"
+            {...register("password", { required: "Este campo es requerido" })}
+          />
+          <FormErrorMessage>
+            {errors.password && errors.password.message}
+          </FormErrorMessage>
         </FormControl>
-        <Button>Ingresar</Button>
-        <Link to="/signin">
-          <Button>Crear nueva cuenta</Button>
-        </Link>
+        <Divider />
+        <Button
+          mt={4}
+          colorScheme="blue"
+          isLoading={isSubmitting}
+          type="submit"
+        >
+          Ingresar
+        </Button>
       </form>
     </Layout>
   );
 };
 
-export default Login;
+export default withRouter(Login);

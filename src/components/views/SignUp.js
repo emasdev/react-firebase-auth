@@ -12,7 +12,7 @@ import {
 import Layout from "../Layout/Layout";
 import { useAuth } from "../../hooks/useAuth";
 
-export default function SignUp() {
+const SignUp = ({ history }) => {
   const { doCreateUserWithEmailAndPassword, doCreateUserDoc } = useAuth();
 
   const {
@@ -29,15 +29,11 @@ export default function SignUp() {
         values.email,
         values.password
       );
-      console.log("user was created");
-      console.log(user);
-
       isDocCreated = await doCreateUserDoc(user, {
         nombre: values.nombre,
         apellidos: values.apellidos,
       });
-      console.log("userDoc created");
-      console.log(isDocCreated);
+      history.push("/");
     } catch (e) {
       console.error(e.message);
     }
@@ -127,4 +123,6 @@ export default function SignUp() {
       </form>
     </Layout>
   );
-}
+};
+
+export default withRouter(SignUp);

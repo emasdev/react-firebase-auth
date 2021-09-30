@@ -4,8 +4,10 @@ import {
   getAuth,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import Loading from "../components/views/Loading";
 
 const config = {
@@ -29,6 +31,7 @@ export const useAuth = () => {
 // Provider hook that creates auth object and handles state
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const auth = getAuth();
   const db = getFirestore();
@@ -45,6 +48,28 @@ export const AuthProvider = ({ children }) => {
     });
   }, [auth]);
 
+  useEffect(() => {
+    if (user && !userData) {
+      getCurrentUserDoc().then((data) => {
+        setUserData(data);
+        console.log("userData");
+        console.log(userData);
+      });
+    }
+  }, [user, db]);
+
+  const doSignInWithEmailAndPassword = async (email, password) => {
+    let userCredentials = null;
+    try {
+      userCredentials = await signInWithEmailAndPassword(auth, email, password);
+      //setUser(user);
+    } catch (e) {
+      console.error(e.message);
+    }
+
+    return userCredentials.user;
+  };
+
   const doCreateUserDoc = async (user, data) => {
     let isCreated = false;
     try {
@@ -52,12 +77,40 @@ export const AuthProvider = ({ children }) => {
         nombre: data.nombre,
         apellidos: data.apellidos,
       });
+      setUserData(doc);
       isCreated = true;
     } catch (e) {
       console.error("Error adding document: ", e);
     }
 
     return isCreated;
+  };
+
+  const getCurrentUserDoc = async () => {
+    const docRef = doc(db, "usuarios", user.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return data;
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  };
+
+  const doSignOut = async () => {
+    let isSignedOut = false;
+    try {
+      await signOut(auth);
+      isSignedOut = true;
+      setUserData(null);
+      setUser(null);
+    } catch (e) {
+      console.error(e.message);
+    }
+
+    return isSignedOut;
   };
 
   const doCreateUserWithEmailAndPassword = async (email, password) => {
@@ -73,27 +126,17 @@ export const AuthProvider = ({ children }) => {
     }
 
     return userCredentials.user;
-    // createUserWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     const user = userCredential.user;
-    //     console.log(user);
-    //     // ...
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log(error.message);
-    //     // ..
-    //   });
   };
 
   // The user object and auth methods
   const values = {
     user,
+    userData,
     isAuthenticating,
+    doSignInWithEmailAndPassword,
     doCreateUserWithEmailAndPassword,
     doCreateUserDoc,
+    doSignOut,
   };
 
   if (isAuthenticating) {
