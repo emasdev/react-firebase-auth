@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 import Loading from "../components/views/Loading";
 
 const config = {
@@ -30,21 +31,34 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const auth = getAuth();
+  const db = getFirestore();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setIsAuthenticating(false);
       if (user) {
         console.log("user is in");
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        //const uid = user.uid;
         setUser(user);
       } else {
         console.log("no user in");
       }
     });
   }, [auth]);
+
+  const doCreateUserDoc = async (user, data) => {
+    let isCreated = false;
+    try {
+      await setDoc(doc(db, "usuarios", user.uid), {
+        nombre: data.nombre,
+        apellidos: data.apellidos,
+      });
+      isCreated = true;
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+
+    return isCreated;
+  };
 
   const doCreateUserWithEmailAndPassword = async (email, password) => {
     let userCredentials = null;
@@ -79,6 +93,7 @@ export const AuthProvider = ({ children }) => {
     user,
     isAuthenticating,
     doCreateUserWithEmailAndPassword,
+    doCreateUserDoc,
   };
 
   if (isAuthenticating) {

@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { AuthProvider, useAuth } from "../hooks/useAuth";
+import { AuthProvider } from "../hooks/useAuth";
 import Login from "./views/Login";
 import SignUp from "./views/SignUp";
 import Landing from "./views/Landing";

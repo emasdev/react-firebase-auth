@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import React from "react";
+import { withRouter } from "react-router-dom";
 import {
   FormErrorMessage,
   FormLabel,
@@ -12,7 +13,7 @@ import Layout from "../Layout/Layout";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function SignUp() {
-  const { doCreateUserWithEmailAndPassword } = useAuth();
+  const { doCreateUserWithEmailAndPassword, doCreateUserDoc } = useAuth();
 
   const {
     handleSubmit,
@@ -20,15 +21,26 @@ export default function SignUp() {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const onSubmit = (values) => {
-    doCreateUserWithEmailAndPassword(values.email, values.password)
-      .then((user) => {
-        console.log("user was created");
-        console.log(user);
-      })
-      .catch((err) => {
-        console.error(err.message);
+  const onSubmit = async (values) => {
+    let user = null;
+    let isDocCreated = null;
+    try {
+      user = await doCreateUserWithEmailAndPassword(
+        values.email,
+        values.password
+      );
+      console.log("user was created");
+      console.log(user);
+
+      isDocCreated = await doCreateUserDoc(user, {
+        nombre: values.nombre,
+        apellidos: values.apellidos,
       });
+      console.log("userDoc created");
+      console.log(isDocCreated);
+    } catch (e) {
+      console.error(e.message);
+    }
 
     // return new Promise((resolve) => {
     //   setTimeout(() => {
