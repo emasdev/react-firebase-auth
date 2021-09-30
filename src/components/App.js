@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { AuthProvider, useAuth } from "../hooks/useAuth";
 import Login from "./views/Login";
-import SignIn from "./views/SignIn";
+import SignUp from "./views/SignUp";
 import Landing from "./views/Landing";
 import Error from "./views/Error";
 
@@ -14,8 +14,8 @@ const App = () => {
           <Route exact path="/">
             <Landing />
           </Route>
-          <Route path="/signin">
-            <SignIn />
+          <Route path="/signup">
+            <SignUp />
           </Route>
           <Route path="/login">
             <Login />

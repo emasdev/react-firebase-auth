@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import Loading from "../components/views/Loading";
 
 const config = {
@@ -42,10 +46,39 @@ export const AuthProvider = ({ children }) => {
     });
   }, [auth]);
 
+  const doCreateUserWithEmailAndPassword = async (email, password) => {
+    let userCredentials = null;
+    try {
+      userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+    } catch (e) {
+      console.error(e);
+    }
+
+    return userCredentials.user;
+    // createUserWithEmailAndPassword(auth, email, password)
+    //   .then((userCredential) => {
+    //     // Signed in
+    //     const user = userCredential.user;
+    //     console.log(user);
+    //     // ...
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     console.log(error.message);
+    //     // ..
+    //   });
+  };
+
   // The user object and auth methods
   const values = {
     user,
     isAuthenticating,
+    doCreateUserWithEmailAndPassword,
   };
 
   if (isAuthenticating) {
